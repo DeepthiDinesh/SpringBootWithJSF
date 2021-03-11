@@ -1,0 +1,673 @@
+{
+  "swagger" : "2.0",
+  "info" : {
+    "description" : "Assets are all the products and equipment belonging to your organization that are installed in Equinix's IBXs. These assets can be viewed by users with the appropriate permissions. Assets can be searched by a filter criterion, or the details of an individual asset can be looked up by its asset ID.",
+    "version" : "1.0.0",
+    "title" : "Install Bases Asset API",
+    "termsOfService" : "https://developer.equinix.com/agreement",
+    "contact" : {
+      "name" : "Equinix API Support",
+      "email" : "api-support@equinix.com"
+    }
+  },
+  "host" : "api.equinix.com",
+  "schemes" : [ "https" ],
+  "produces" : [ "application/json" ],
+  "paths" : {
+    "/ecp/v1/assets/search" : {
+      "post" : {
+        "tags" : [ "Assets" ],
+        "summary" : "Search permissible assets",
+        "description" : "The POST assets API returns all assets for a specific asset from search form. The authorization token and content-type are the only headers that are passed to this API and a response is received based on the values passed.",
+        "operationId" : "searchAssets",
+        "consumes" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Specify the Access token with prefix 'Bearer '.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "sorts",
+          "in" : "query",
+          "description" : "Sort fields ",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "SERIAL_NUMBER", "ORDER_NUMBER", "PRODUCT_TYPE", "PRODUCT_NAME", "CAGE", "IBX", "PRODUCT_DESCRIPTION", "ACCOUNT_NUMBER", "INSTALLED_DATE", "ASSET_NUMBER", "-SERIAL_NUMBER", "-ORDER_NUMBER", "-PRODUCT_TYPE", "-PRODUCT_NAME", "-CAGE", "-IBX", "-PRODUCT_DESCRIPTION", "-ACCOUNT_NUMBER", "-INSTALLED_DATE", "-ASSET_NUMBER" ]
+          },
+          "collectionFormat" : "csv"
+        }, {
+          "name" : "source",
+          "in" : "query",
+          "description" : "\"q\" parameter will be searched in these fields, by default search will performed on all fields",
+          "required" : false,
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "LEGACY_CAGE", "LEGACY_CABINET", "LEGACY_PATCH_PANEL", "LEGACY_SALES_ORDER", "BILLING_AGREEMENT", "CAGE", "CABINET", "PATCH_PANEL", "ASSET_NUMBER", "CUSTOMER_INTERNAL_REFERENCE", "SALES_ORDER_NUMBER", "CABLE_ID", "CARRIER_CIRCUIT_ID", "SERIAL_NUMBER", "EXTERNAL_REFERENCE_NUMBER", "ACCOUNT_NUMBER" ]
+          },
+          "collectionFormat" : "csv"
+        }, {
+          "name" : "q",
+          "in" : "query",
+          "description" : "To support add a keyword, free text search on source fields. Min 3 character for efficient search results.",
+          "required" : false,
+          "type" : "string"
+        }, {
+          "name" : "exactMatch",
+          "in" : "query",
+          "description" : "flag determines the q should be Exact match or partial match, By default flag is false",
+          "required" : false,
+          "type" : "boolean"
+        }, {
+          "name" : "offset",
+          "in" : "query",
+          "description" : "The start index from which the list is created.",
+          "required" : false,
+          "type" : "integer",
+          "minimum" : 0
+        }, {
+          "name" : "limit",
+          "in" : "query",
+          "description" : "Number of entries in response.",
+          "required" : false,
+          "type" : "integer",
+          "maximum" : 100,
+          "minimum" : 1
+        }, {
+          "in" : "body",
+          "name" : "body",
+          "required" : false,
+          "schema" : {
+            "$ref" : "#/definitions/assets-search-request"
+          }
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Assets search response",
+            "examples" : {
+              "application/json" : {
+                "data" : [ {
+                  "assetNumber" : "4-123456789",
+                  "serialNumber" : "123456-A",
+                  "orderNumber" : "1-123456789",
+                  "productName" : "CROSS_CONNECT",
+                  "ibx" : "AB1",
+                  "cage" : "ACB1:01:001AB1",
+                  "productDescription" : "Network Cable Connection",
+                  "accountNumber" : "123456",
+                  "accountName" : "Equinix customer",
+                  "installationDate" : "2017-08-24T17:46:35Z",
+                  "customerReferenceNumber" : "ABZ-12345",
+                  "status" : "ACTIVE",
+                  "additionalDetails" : {
+                    "cabinetNumber" : "ACB1:01:001AB1:1234",
+                    "customerOrCarrierCircuitID" : "121513A"
+                  }
+                }, {
+                  "assetNumber" : "4-123456789",
+                  "serialNumber" : "123456-A",
+                  "orderNumber" : "1-123456789",
+                  "productName" : "CROSS_CONNECT",
+                  "ibx" : "AB1",
+                  "cage" : "ACB1:01:001AB1",
+                  "productDescription" : "Network Cable Connection",
+                  "accountNumber" : "123456",
+                  "accountName" : "Equinix customer",
+                  "installationDate" : "2017-08-24T17:46:35Z",
+                  "customerReferenceNumber" : "ABZ-12345",
+                  "status" : "ACTIVE",
+                  "additionalDetails" : {
+                    "cabinetNumber" : "ACB1:01:001AB1:1234",
+                    "customerOrCarrierCircuitID" : "121513A"
+                  }
+                } ],
+                "page" : {
+                  "total" : 20,
+                  "limit" : 2,
+                  "offset" : 0,
+                  "sorts" : [ "ASSET_NUMBER" ]
+                },
+                "_links" : {
+                  "self" : {
+                    "href" : "/assets/search?limit=2&exactMatch=true&offset=0&sorts=ASSET_NUMBER"
+                  },
+                  "next" : {
+                    "href" : "/assets/search?limit=2&exactMatch=true&offset=2&sorts=ASSET_NUMBER"
+                  },
+                  "previous" : {
+                    "href" : "/assets/search?limit=2&exactMatch=true&offset=0&sorts=ASSET_NUMBER"
+                  }
+                }
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/assets-search-response"
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-403",
+                  "message" : "Insufficient permission to access the resource or invoke the request."
+                } ],
+                "ticketId" : "180321033352341"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-500",
+                  "message" : "The system had encountered an unexpected problem and we are tracking it with error code."
+                } ],
+                "ticketId" : "18032103331214"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          },
+          "503" : {
+            "description" : "System unavaiable",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-500",
+                  "message" : "System unavaliable."
+                } ],
+                "ticketId" : "18032103331314"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          }
+        }
+      }
+    },
+    "/ecp/v1/assets/{assetId}" : {
+      "get" : {
+        "tags" : [ "Assets" ],
+        "summary" : "Get details of an asset",
+        "description" : "The Get assets by Id API returns all details for a specific asset from its identification number. The authorization token and content-type are the only headers that are passed to this API and a response is received based on the values passed.",
+        "operationId" : "getAssetById",
+        "consumes" : [ "application/json" ],
+        "produces" : [ "application/json" ],
+        "parameters" : [ {
+          "name" : "Authorization",
+          "in" : "header",
+          "description" : "Specify the Access token with prefix 'Bearer '.",
+          "required" : true,
+          "type" : "string"
+        }, {
+          "name" : "assetId",
+          "in" : "path",
+          "description" : "{assetId} identification number",
+          "required" : true,
+          "type" : "string"
+        } ],
+        "responses" : {
+          "200" : {
+            "description" : "Assets search response",
+            "examples" : {
+              "application/json" : {
+                "data" : [ {
+                  "assetNumber" : "4-123456789",
+                  "serialNumber" : "123456-A",
+                  "orderNumber" : "1-123456789",
+                  "productName" : "CROSS_CONNECT",
+                  "ibx" : "AB1",
+                  "cage" : "ACB1:01:001AB1",
+                  "productDescription" : "Network Cable Connection",
+                  "accountNumber" : "123456",
+                  "accountName" : "Equinix customer",
+                  "installationDate" : "2017-08-24T17:46:35Z",
+                  "customerReferenceNumber" : "ABZ-12345",
+                  "status" : "ACTIVE",
+                  "productDetails" : [ {
+                    "key" : "ACCOUNT",
+                    "value" : "Equinix customer",
+                    "Tag" : "HEADER"
+                  }, {
+                    "key" : "A-SIDE-Customer",
+                    "value" : "A-side-customer",
+                    "Tag" : "A_SIDE_INFORMATION"
+                  }, {
+                    "key" : "Z-SIDE-Customer",
+                    "value" : "Z-side-customer",
+                    "Tag" : "Z_SIDE_INFORMATION"
+                  } ]
+                } ]
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/asset"
+            }
+          },
+          "403" : {
+            "description" : "Forbidden",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-403",
+                  "message" : "Insufficient permission to access the resource or invoke the request."
+                } ],
+                "ticketId" : "180321033352341"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          },
+          "404" : {
+            "description" : "Not Found",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-404",
+                  "message" : "No Asset found for the Id:4-12345678910."
+                } ],
+                "ticketId" : "180321033352341"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          },
+          "500" : {
+            "description" : "Internal server error",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-500",
+                  "message" : "The system had encountered an unexpected problem and we are tracking it with error code."
+                } ],
+                "ticketId" : "18032103331214"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          },
+          "503" : {
+            "description" : "System unavaiable",
+            "examples" : {
+              "application/json" : {
+                "errors" : [ {
+                  "code" : "EQX-434-500",
+                  "message" : "System unavaliable."
+                } ],
+                "ticketId" : "18032103331314"
+              }
+            },
+            "schema" : {
+              "$ref" : "#/definitions/genricerrorinfo"
+            }
+          }
+        }
+      }
+    }
+  },
+  "definitions" : {
+    "_links" : {
+      "type" : "object",
+      "properties" : {
+        "next" : {
+          "$ref" : "#/definitions/reference-link"
+        },
+        "self" : {
+          "$ref" : "#/definitions/reference-link"
+        },
+        "previous" : {
+          "$ref" : "#/definitions/reference-link"
+        }
+      },
+      "title" : "_links"
+    },
+    "assetsSummary" : {
+      "type" : "object",
+      "properties" : {
+        "assetNumber" : {
+          "type" : "string",
+          "description" : "Asset number."
+        },
+        "serialNumber" : {
+          "type" : "string",
+          "description" : "Serial numbmer of the asset."
+        },
+        "orderNumber" : {
+          "type" : "string",
+          "description" : "Order number associated with the asset/service."
+        },
+        "productName" : {
+          "type" : "string",
+          "description" : "Product type."
+        },
+        "ibx" : {
+          "type" : "string",
+          "description" : "Ibx of the location."
+        },
+        "cage" : {
+          "type" : "string",
+          "description" : "Cage of the location."
+        },
+        "productDescription" : {
+          "type" : "string",
+          "description" : "Prouduct description."
+        },
+        "accountNumber" : {
+          "type" : "string",
+          "description" : "Account number the product/services belongs to."
+        },
+        "accountName" : {
+          "type" : "string",
+          "description" : "Account name trhe product/services."
+        },
+        "installationDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Date time the product or service is purchased/installed."
+        },
+        "customerReferenceNumber" : {
+          "type" : "string",
+          "description" : "Customer reference number."
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACTIVE", "INACTIVE" ]
+        },
+        "additionalDetails" : {
+          "$ref" : "#/definitions/additionalDetails"
+        }
+      },
+      "title" : "AssetsSummary"
+    },
+    "asset" : {
+      "type" : "object",
+      "properties" : {
+        "assetNumber" : {
+          "type" : "string",
+          "description" : "Asset number."
+        },
+        "serialNumber" : {
+          "type" : "string",
+          "description" : "Serial numbmer of the asset."
+        },
+        "orderNumber" : {
+          "type" : "string",
+          "description" : "Order number associated with the asset/service."
+        },
+        "productName" : {
+          "type" : "string",
+          "description" : "Product type."
+        },
+        "ibx" : {
+          "type" : "string",
+          "description" : "Ibx of the location."
+        },
+        "cage" : {
+          "type" : "string",
+          "description" : "Cage of the location."
+        },
+        "productDescription" : {
+          "type" : "string",
+          "description" : "Prouduct description."
+        },
+        "accountNumber" : {
+          "type" : "string",
+          "description" : "Account number the product/services belongs to."
+        },
+        "accountName" : {
+          "type" : "string",
+          "description" : "Account name trhe product/services."
+        },
+        "installationDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Date time the product or service is purchased/installed."
+        },
+        "customerReferenceNumber" : {
+          "type" : "string",
+          "description" : "Customer reference number."
+        },
+        "status" : {
+          "type" : "string",
+          "enum" : [ "ACTIVE", "INACTIVE" ]
+        },
+        "productDetails" : {
+          "type" : "array",
+          "description" : "key/value pairs of product details.",
+          "items" : {
+            "$ref" : "#/definitions/assetsProperty"
+          }
+        }
+      },
+      "title" : "Asset",
+      "description" : "assets details."
+    },
+    "assetsProperty" : {
+      "type" : "object",
+      "required" : [ "key", "value" ],
+      "properties" : {
+        "key" : {
+          "type" : "string",
+          "description" : "Key of the property."
+        },
+        "value" : {
+          "type" : "string",
+          "description" : "Value of the property."
+        },
+        "tag" : {
+          "type" : "string",
+          "description" : "Stands for a logical grouping on where the asset belogs to for a particular product. e.g - A-SIDE for Cross Connect."
+        }
+      },
+      "title" : "AssetsProperty",
+      "description" : "key/value pair representing assets property."
+    },
+    "assets-search-request" : {
+      "type" : "object",
+      "properties" : {
+        "filter" : {
+          "$ref" : "#/definitions/assetssearchrequest_filter"
+        }
+      },
+      "title" : "AssetsSearchRequest"
+    },
+    "page-info" : {
+      "type" : "object",
+      "properties" : {
+        "limit" : {
+          "type" : "integer",
+          "description" : "Starting count based on offset."
+        },
+        "offset" : {
+          "type" : "integer",
+          "description" : "Limit count per page."
+        },
+        "total" : {
+          "type" : "integer",
+          "description" : "Matching record count / total number records matched with filter."
+        },
+        "sorts" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "SERIAL_NUMBER", "-SERIAL_NUMBER", "ORDER_NUMBER", "-ORDER_NUMBER", "PRODUCT_TYPE", "-PRODUCT_TYPE", "CAGE", "-CAGE", "IBX", "-IBX", "PRODUCT_DESCRIPTION", "-PRODUCT_DESCRIPTION", "ACCOUNT_NUMBER", "-ACCOUNT_NUMBER", "INSTALLED_DATE", "-INSTALLED_DATE" ]
+          }
+        }
+      },
+      "title" : "PageInfo"
+    },
+    "assets-search-response" : {
+      "title" : "AssetsSearchResponse",
+      "allOf" : [ {
+        "properties" : {
+          "data" : {
+            "type" : "array",
+            "items" : {
+              "$ref" : "#/definitions/assetsSummary"
+            }
+          },
+          "page" : {
+            "$ref" : "#/definitions/page-info"
+          },
+          "_links" : {
+            "$ref" : "#/definitions/_links"
+          }
+        }
+      }, { } ]
+    },
+    "reference-link" : {
+      "type" : "object",
+      "required" : [ "href" ],
+      "properties" : {
+        "href" : {
+          "type" : "string"
+        }
+      },
+      "title" : "ReferenceLink"
+    },
+    "additionalDetails" : {
+      "type" : "object",
+      "properties" : {
+        "cabinetNumber" : {
+          "type" : "string"
+        },
+        "customerOrCarrierCircuitID" : {
+          "type" : "string"
+        }
+      },
+      "title" : "AdditionalDetails",
+      "description" : "These are additional details specific to the asset"
+    },
+    "genricerrorinfo" : {
+      "type" : "object",
+      "properties" : {
+        "errors" : {
+          "type" : "array",
+          "items" : {
+            "$ref" : "#/definitions/genricerrorType"
+          }
+        },
+        "ticketId" : {
+          "type" : "string"
+        }
+      },
+      "title" : "GenricErrorInfo",
+      "example" : {
+        "errors" : [ {
+          "code" : "EQX-434-404",
+          "message" : "No Asset found for the Id:4-12345678910"
+        } ],
+        "ticketId" : "171019113634168"
+      }
+    },
+    "genricerrorType" : {
+      "type" : "object",
+      "properties" : {
+        "code" : {
+          "type" : "string"
+        },
+        "fields" : {
+          "type" : "array",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "message" : {
+          "type" : "string"
+        }
+      },
+      "title" : "GenricErrorType",
+      "example" : {
+        "code" : "EQX-434-404",
+        "message" : "No Asset found for the Id:4-12345678910"
+      }
+    },
+    "assetssearchrequest_filter_dateRange" : {
+      "type" : "object",
+      "required" : [ "fromDate", "toDate" ],
+      "properties" : {
+        "fromDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "Start date to filter the installed date."
+        },
+        "toDate" : {
+          "type" : "string",
+          "format" : "date-time",
+          "description" : "End date to filter the installed date."
+        }
+      },
+      "description" : "Date range filter. The installed date shouldbe withing this data range."
+    },
+    "assetssearchrequest_filter" : {
+      "type" : "object",
+      "properties" : {
+        "ibxs" : {
+          "type" : "array",
+          "description" : "List of IBX to be filterd.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "cages" : {
+          "type" : "array",
+          "description" : "List of cages to be filterd.",
+          "items" : {
+            "type" : "string"
+          }
+        },
+        "productTypes" : {
+          "type" : "array",
+          "description" : "List of product types to be filtred.",
+          "items" : {
+            "type" : "string",
+            "enum" : [ "ACCESSORIES", "CABINET", "CAGE", "CROSS_CONNECT", "CUSTOMER_PROVIDED_CABINET", "EQUINIX_ETHERNET_EXCHANGE", "EQUINIX_CLOUD_EXCHANGE", "PATCH_PANEL", "POWER", "IBX_SMARTVIEW", "IBX_SMARTVIEW_SENSOR", "OTHERS" ]
+          }
+        },
+        "dateRange" : {
+          "$ref" : "#/definitions/assetssearchrequest_filter_dateRange"
+        }
+      },
+      "description" : "assets search filter."
+    }
+  },
+  "parameters" : {
+    "limit" : {
+      "name" : "limit",
+      "in" : "query",
+      "description" : "Number of entries in response.",
+      "required" : false,
+      "type" : "integer",
+      "maximum" : 100,
+      "minimum" : 1
+    },
+    "offset" : {
+      "name" : "offset",
+      "in" : "query",
+      "description" : "The start index from which the list is created.",
+      "required" : false,
+      "type" : "integer",
+      "minimum" : 0
+    },
+    "authorizationHeader" : {
+      "name" : "Authorization",
+      "in" : "header",
+      "description" : "Specify the Access token with prefix 'Bearer '.",
+      "required" : true,
+      "type" : "string"
+    }
+  }
+}
